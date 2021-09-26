@@ -1,18 +1,24 @@
 <?php
-$http_client_ip=$_SERVER['HTTP_CLIENT_IP'];
-$http_forwarded_for=$_SERVER['HTTP_FORWARDED_FOR'];
-$remote_addr=$_SERVER['REMOTE_ADDR'];
-
-if(!empty($http_client_ip))
-{
- $ipaddress=$http_client_ip;
+ 
+// Function to get the client IP address
+function get_client_ip() {
+    $ipaddress = '';
+    if (isset($_SERVER['HTTP_CLIENT_IP']))
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    else if(isset($_SERVER['HTTP_X_FORWARDED']))
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    else if(isset($_SERVER['HTTP_FORWARDED']))
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    else if(isset($_SERVER['REMOTE_ADDR']))
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    else
+        $ipaddress = 'UNKNOWN';
+    return $ipaddress;
 }
-else if(!empty($http_forwarded_for))
-{
- $ipaddress=$http_forwarded_for;
-}
-else if(!empty($remote_addr))
-{
- $ipadress=$remote_addr;
-}
-echo $ipaddress;
+ 
+ 
+echo "Your IP address is: " . get_client_ip();
